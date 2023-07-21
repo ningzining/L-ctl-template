@@ -14,7 +14,7 @@ type I{{.Name}}Repo interface {
 	Delete(id int64) error
 	Update(po *model.{{.Name}}) error
 	FindById(id int64) (*model.{{.Name}}, error)
-	FindByPage(id int64, page int, pageSize int) ([]*model.{{.Name}}, error)
+	FindByPage(page int, pageSize int) ([]*model.{{.Name}}, error)
 	FindAll() ([]*model.{{.Name}}, error)
 }
 
@@ -47,8 +47,8 @@ func (r *{{.Name}}Repo) FindById(id int64) (po *model.{{.Name}}, err error) {
 	return
 }
 
-func (r *{{.Name}}Repo) FindByPage(id int64, page int, pageSize int) (list []*model.{{.Name}}, err error) {
-	err = r.db.Table(r.TableName()).Where("id = ?", id).Where("deleted = 0").Order("id asc").Offset(page * pageSize).Limit(pageSize).Find(&list).Error
+func (r *{{.Name}}Repo) FindByPage(page int, pageSize int) (list []*model.{{.Name}}, err error) {
+	err = r.db.Table(r.TableName()).Where("deleted = 0").Order("id asc").Offset(page * pageSize).Limit(pageSize).Find(&list).Error
 	return
 }
 
