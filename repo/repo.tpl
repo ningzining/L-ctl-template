@@ -16,6 +16,7 @@ type I{{.Name}}Repo interface {
 	FindById(id int64) (*model.{{.Name}}, error)
 	FindByPage(page int, pageSize int) ([]*model.{{.Name}}, error)
 	FindAll() ([]*model.{{.Name}}, error)
+	Count() (int64, error)
 }
 
 func New{{.Name}}(db *gorm.DB) I{{.Name}}Repo {
@@ -54,5 +55,10 @@ func (r *{{.Name}}Repo) FindByPage(page int, pageSize int) (list []*model.{{.Nam
 
 func (r *{{.Name}}Repo) FindAll() (list []*model.{{.Name}}, err error) {
 	err = r.db.Table(r.TableName()).Where("deleted = 0").Order("id asc").Find(&list).Error
+	return
+}
+
+func (r *{{.Name}}Repo) Count() (count int64, err error) {
+	err = r.db.Table(r.TableName()).Where("deleted = 0").Count(&count).Error
 	return
 }
