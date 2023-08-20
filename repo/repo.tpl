@@ -1,4 +1,4 @@
-package repo
+package {{.pkg}}
 
 import (
 	"gorm.io/gorm"
@@ -19,7 +19,7 @@ type I{{.Name}}Repo interface {
 	Count() (int64, error)
 }
 
-func New{{.Name}}(db *gorm.DB) I{{.Name}}Repo {
+func New{{.Name}}Repo(db *gorm.DB) I{{.Name}}Repo {
 	return &{{.Name}}Repo{db: db}
 }
 
