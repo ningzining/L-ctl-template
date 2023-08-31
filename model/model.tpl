@@ -11,3 +11,7 @@ type {{.objectName}} struct {
     {{range .fields}}{{.name}} {{.type}} {{.tag}} {{if .hasComment}}// {{.comment}}{{end}}
     {{end}}
 }
+
+func (t *{{.objectName}}) TableName() string {
+    return "{{.tableName}}"
+}
