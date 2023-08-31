@@ -3,64 +3,65 @@
 package {{.pkg}}
 
 import (
+    "context"
 	"gorm.io/gorm"
 )
 
-type {{.Name}}Repo struct {
+type {{.name}}Repo struct {
 	db *gorm.DB
 }
 
-type I{{.Name}}Repo interface {
-	Create(po *model.{{.Name}}) error
-	CreateInBatches(list []*model.{{.Name}}) error
-	Delete(id int64) error
-	Update(po *model.{{.Name}}) error
-	FindById(id int64) (*model.{{.Name}}, error)
-	FindByPage(page int, pageSize int) ([]*model.{{.Name}}, error)
-	FindAll() ([]*model.{{.Name}}, error)
-	Count() (int64, error)
+type I{{.name}}Repo interface {
+	Create(ctx context.Context, po *model.{{.name}}) error
+	CreateInBatches(ctx context.Context, list []*model.{{.name}}) error
+	Delete(ctx context.Context, id int64) error
+	Update(ctx context.Context, po *model.{{.name}}) error
+	FindById(ctx context.Context, id int64) (*model.{{.name}}, error)
+	FindByPage(ctx context.Context, page int, pageSize int) ([]*model.{{.name}}, error)
+	FindAll(ctx context.Context) ([]*model.{{.name}}, error)
+	Count(ctx context.Context) (int64, error)
 }
 
-func New{{.Name}}Repo(db *gorm.DB) I{{.Name}}Repo {
-	return &{{.Name}}Repo{db: db}
+func New{{.name}}Repo(db *gorm.DB) I{{.name}}Repo {
+	return &{{.name}}Repo{db: db}
 }
 
-func (r *{{.Name}}Repo) TableName() string {
-	return "{{.TableName}}"
+func (r *{{.name}}Repo) name() string {
+	return "{{.tableName}}"
 }
 
-func (r *{{.Name}}Repo) Create(po *model.{{.Name}}) error {
+func (r *{{.name}}Repo) Create(ctx context.Context, po *model.{{.name}}) error {
 	return r.db.Table(r.TableName()).Create(&po).Error
 }
 
-func (r *{{.Name}}Repo) CreateInBatches(list []*model.{{.Name}}) error {
+func (r *{{.name}}Repo) CreateInBatches(ctx context.Context, list []*model.{{.name}}) error {
 	return r.db.Table(r.TableName()).CreateInBatches(list, len(list)).Error
 }
 
-func (r *{{.Name}}Repo) Delete(id int64) error {
+func (r *{{.name}}Repo) Delete(ctx context.Context, id int64) error {
 	return r.db.Table(r.TableName()).Where("id = ?", id).Update("deleted", 1).Error
 }
 
-func (r *{{.Name}}Repo) Update(po *model.{{.Name}}) error {
-	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Updates(&po).Error
+func (r *{{.name}}Repo) Update(ctx context.Context, po *model.{{.name}}) error {
+	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Save(&po).Error
 }
 
-func (r *{{.Name}}Repo) FindById(id int64) (po *model.{{.Name}}, err error) {
-	err = r.db.Table(r.TableName()).Where("id = ?", id).Where("deleted = 0").First(&po).Error
+func (r *{{.name}}Repo) FindById(ctx context.Context, id int64) (po *model.{{.name}}, err error) {
+	err = r.db.Table(r.TableName()).Where("id = ?", id).Find(&po).Error
 	return
 }
 
-func (r *{{.Name}}Repo) FindByPage(page int, pageSize int) (list []*model.{{.Name}}, err error) {
-	err = r.db.Table(r.TableName()).Where("deleted = 0").Order("id asc").Offset(page * pageSize).Limit(pageSize).Find(&list).Error
+func (r *{{.name}}Repo) FindByPage(ctx context.Context, page int, pageSize int) (list []*model.{{.name}}, err error) {
+	err = r.db.Table(r.TableName()).Order("id asc").Offset((page-1) * pageSize).Limit(pageSize).Find(&list).Error
 	return
 }
 
-func (r *{{.Name}}Repo) FindAll() (list []*model.{{.Name}}, err error) {
-	err = r.db.Table(r.TableName()).Where("deleted = 0").Order("id asc").Find(&list).Error
+func (r *{{.name}}Repo) FindAll(ctx context.Context) (list []*model.{{.name}}, err error) {
+	err = r.db.Table(r.TableName()).Order("id asc").Find(&list).Error
 	return
 }
 
-func (r *{{.Name}}Repo) Count() (count int64, err error) {
-	err = r.db.Table(r.TableName()).Where("deleted = 0").Count(&count).Error
+func (r *{{.name}}Repo) Count(ctx context.Context) (count int64, err error) {
+	err = r.db.Table(r.TableName()).Count(&count).Error
 	return
 }
