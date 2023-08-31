@@ -26,7 +26,7 @@ func New{{.name}}Repo(db *gorm.DB) I{{.name}}Repo {
 	return &{{.name}}Repo{db: db}
 }
 
-func (r *{{.name}}Repo) name() string {
+func (r *{{.name}}Repo) TableName() string {
 	return "{{.tableName}}"
 }
 
