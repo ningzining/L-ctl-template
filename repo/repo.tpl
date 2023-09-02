@@ -16,10 +16,10 @@ type I{{.name}}Repo interface {
 	CreateInBatches(ctx context.Context, list []*models.{{.name}}) error
 	Delete(ctx context.Context, id int64) error
 	Update(ctx context.Context, po *models.{{.name}}) error
+	UpdateByMap(ctx context.Context, fields map[string]any) error
 	FindById(ctx context.Context, id int64) (*models.{{.name}}, error)
 	FindByPage(ctx context.Context, page int, pageSize int) ([]*models.{{.name}}, error)
 	FindAll(ctx context.Context) ([]*models.{{.name}}, error)
-	UpdateByMap(ctx context.Context, fields map[string]any) error
 	Count(ctx context.Context) (int64, error)
 }
 
