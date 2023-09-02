@@ -12,14 +12,14 @@ type {{.name}}Repo struct {
 }
 
 type I{{.name}}Repo interface {
-	Create(ctx context.Context, po *model.{{.name}}) error
-	CreateInBatches(ctx context.Context, list []*model.{{.name}}) error
+	Create(ctx context.Context, po *models.{{.name}}) error
+	CreateInBatches(ctx context.Context, list []*models.{{.name}}) error
 	Delete(ctx context.Context, id int64) error
-	Update(ctx context.Context, po *model.{{.name}}) error
+	Update(ctx context.Context, po *models.{{.name}}) error
+	FindById(ctx context.Context, id int64) (*models.{{.name}}, error)
+	FindByPage(ctx context.Context, page int, pageSize int) ([]*models.{{.name}}, error)
+	FindAll(ctx context.Context) ([]*models.{{.name}}, error)
 	UpdateByMap(ctx context.Context, fields map[string]any) error
-	FindById(ctx context.Context, id int64) (*model.{{.name}}, error)
-	FindByPage(ctx context.Context, page int, pageSize int) ([]*model.{{.name}}, error)
-	FindAll(ctx context.Context) ([]*model.{{.name}}, error)
 	Count(ctx context.Context) (int64, error)
 }
 
@@ -31,11 +31,11 @@ func (r *{{.name}}Repo) TableName() string {
 	return "{{.tableName}}"
 }
 
-func (r *{{.name}}Repo) Create(ctx context.Context, po *model.{{.name}}) error {
+func (r *{{.name}}Repo) Create(ctx context.Context, po *models.{{.name}}) error {
 	return r.db.Table(r.TableName()).Create(&po).Error
 }
 
-func (r *{{.name}}Repo) CreateInBatches(ctx context.Context, list []*model.{{.name}}) error {
+func (r *{{.name}}Repo) CreateInBatches(ctx context.Context, list []*models.{{.name}}) error {
 	return r.db.Table(r.TableName()).CreateInBatches(list, len(list)).Error
 }
 
@@ -43,25 +43,25 @@ func (r *{{.name}}Repo) Delete(ctx context.Context, id int64) error {
 	return r.db.Table(r.TableName()).Where("id = ?", id).Update("deleted", 1).Error
 }
 
-func (r *{{.name}}Repo) Update(ctx context.Context, po *model.{{.name}}) error {
-	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Updates(&po).Error
+func (r *{{.name}}Repo) Update(ctx context.Context, po *models.{{.name}}) error {
+	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Save(&po).Error
 }
 
 func (r *{{.name}}Repo) UpdateByMap(ctx context.Context, fields map[string]any) error {
 	return r.db.Table(r.TableName()).Where("id = ?", fields["id"]).Updates(fields).Error
 }
 
-func (r *{{.name}}Repo) FindById(ctx context.Context, id int64) (po *model.{{.name}}, err error) {
+func (r *{{.name}}Repo) FindById(ctx context.Context, id int64) (po *models.{{.name}}, err error) {
 	err = r.db.Table(r.TableName()).Where("id = ?", id).Find(&po).Error
 	return
 }
 
-func (r *{{.name}}Repo) FindByPage(ctx context.Context, page int, pageSize int) (list []*model.{{.name}}, err error) {
+func (r *{{.name}}Repo) FindByPage(ctx context.Context, page int, pageSize int) (list []*models.{{.name}}, err error) {
 	err = r.db.Table(r.TableName()).Order("id asc").Offset((page-1) * pageSize).Limit(pageSize).Find(&list).Error
 	return
 }
 
-func (r *{{.name}}Repo) FindAll(ctx context.Context) (list []*model.{{.name}}, err error) {
+func (r *{{.name}}Repo) FindAll(ctx context.Context) (list []*models.{{.name}}, err error) {
 	err = r.db.Table(r.TableName()).Order("id asc").Find(&list).Error
 	return
 }
