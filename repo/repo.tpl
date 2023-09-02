@@ -16,6 +16,7 @@ type I{{.name}}Repo interface {
 	CreateInBatches(ctx context.Context, list []*model.{{.name}}) error
 	Delete(ctx context.Context, id int64) error
 	Update(ctx context.Context, po *model.{{.name}}) error
+	UpdateByMap(ctx context.Context, fields map[string]any) error
 	FindById(ctx context.Context, id int64) (*model.{{.name}}, error)
 	FindByPage(ctx context.Context, page int, pageSize int) ([]*model.{{.name}}, error)
 	FindAll(ctx context.Context) ([]*model.{{.name}}, error)
@@ -43,7 +44,11 @@ func (r *{{.name}}Repo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *{{.name}}Repo) Update(ctx context.Context, po *model.{{.name}}) error {
-	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Save(&po).Error
+	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Updates(&po).Error
+}
+
+func (r *{{.name}}Repo) UpdateByMap(ctx context.Context, fields map[string]any) error {
+	return r.db.Table(r.TableName()).Where("id = ?", fields["id"]).Updates(fields).Error
 }
 
 func (r *{{.name}}Repo) FindById(ctx context.Context, id int64) (po *model.{{.name}}, err error) {
