@@ -44,7 +44,7 @@ func (r *{{.name}}Repo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *{{.name}}Repo) Update(ctx context.Context, po *models.{{.name}}) error {
-	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Save(&po).Error
+	return r.db.Table(r.TableName()).Where("id = ?", po.Id).Updates(&po).Error
 }
 
 func (r *{{.name}}Repo) UpdateByMap(ctx context.Context, fields map[string]any) error {
