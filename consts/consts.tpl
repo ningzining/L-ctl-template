@@ -8,4 +8,4 @@ const (
     {{ range .Enum }}{{ .Key }} = "{{ .Value }}" // {{ .Comment }}
     {{ end }}
 )
-{{ end}}
+{{ end }}
