@@ -8,10 +8,10 @@ const (
     {{ end }}
 )
 
-func Description(key string) string {
-    switch key {
-    {{ range .Enums }}case "{{ .Key }}":
-        return = "{{ .Value }}" // {{ .Comment }}
+func Description(value string) string {
+    switch value {
+    {{ range .Enums }}case "{{ .Value }}":
+        return = "{{ .Comment }}"
     {{ end }}
     default:
         return ""
