@@ -11,9 +11,8 @@ const (
 func Description(value string) string {
     switch value {
     {{ range .Enums }}case "{{ .Value }}":
-        return = "{{ .Comment }}"
-    {{ end }}
-    default:
+        return "{{ .Comment }}"
+    {{ end }}default:
         return ""
     }
 }
