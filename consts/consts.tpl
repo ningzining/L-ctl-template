@@ -7,3 +7,13 @@ const (
     {{ range .Enums }}{{ .Key }} = "{{ .Value }}" // {{ .Comment }}
     {{ end }}
 )
+
+func Description(key string) string {
+    switch key {
+    {{ range .Enums }}case "{{ .Key }}":
+        return = "{{ .Value }}" // {{ .Comment }}
+    {{ end }}
+    default:
+        return ""
+    }
+}
